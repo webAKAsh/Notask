@@ -39,9 +39,9 @@ const Notes = () => {
     let stamp = false;
     if (!notes.some(validate)) {
       stamp = true;
-      console.log("unique");
+      // console.log("unique");
     } else {
-      console.log("equal");
+      // console.log("equal");
       validation.classList.remove("hidden");
     }
 
@@ -50,7 +50,7 @@ const Notes = () => {
       const description = document.getElementById("desc");
       if (title.length < 10) {
         if (desc !== "") {
-          console.log(desc, "valid desc");
+          // console.log(desc, "valid desc");
           localStorage.setItem(
             `userNote_${randomNumb}`,
             JSON.stringify(noteData)
@@ -59,7 +59,7 @@ const Notes = () => {
           setNoteState(!noteState)
         } else if (desc === "") {
           description.setAttribute("required", "true");
-          console.log("please write desc");
+          // console.log("please write desc");
         }
       } else if (title.length >= 10) {
         localStorage.setItem(
@@ -84,7 +84,7 @@ const Notes = () => {
     let dataValues = dataKey.map((e) => JSON.parse(localStorage.getItem(e)))
     setNotes(dataValues);
 
-    console.log(title, desc, notes, noteState);
+    // console.log(title, desc, notes, noteState);
 
   }, [noteState]);
 
@@ -102,35 +102,38 @@ const Notes = () => {
         </div>
       </header>
       <main id="noteBox" className="bg-zinc-300 h-screen">
-        <div className="grid grid-cols-5 gap-3 p-3">
+        <div className="flex flex-wrap gap-3 p-3">
           {notes.map((note, i) => {
             return (
               <div
-                style={{
-                  backgroundImage: `url('https://picsum.photos/320/200?random=${i}')`,
-                }}
-                className="bg-cover bg-bottom max-w-xs p-3 space-y-2 border-none rounded-lg shadow"
+                // style={{
+                //   backgroundImage: `url('https://picsum.photos/320/200?random=${i}')`,
+                // }}
+                className="bg-cover bg-bottom max-w-xs bg-slate-900 p-5 space-y-2 border border-amber-300 border-dotted rounded-lg shadow"
                 key={i}
               >
-                <div className="flex justify-between items-center px-2 rounded-lg bg-opacity-20 backdrop-blur-sm drop-shadow-sm bg-black/60">
+                <div className="flex justify-between space-x-10 items-center px-2 rounded-lg">
+                {/* <div className="flex justify-between items-center px-2 rounded-lg bg-opacity-20 backdrop-blur-sm drop-shadow-sm bg-black/60"> */}
                   <h5 className="text-2xl text-white font-bold tracking-tight">
-                    {note.title}
+                    <span className="text-[#f7b816] font-semibold">const</span> {note.title}
                   </h5>
                   <div className="flex items-center justify-end space-x-1">
                     <MdDelete
                       onClick={() => deleteNote(note, i)}
                       className="cursor-pointer text-white"
                     />
-                    {/* <Link href={`/notes/${JSON.stringify(note)}`}> */}
                     <Link href={`/notes/${i}`}>
                       <FiEdit className="cursor-pointer text-white" />
                     </Link>
                   </div>
                 </div>
 
-                <p className=" px-2 rounded-lg bg-opacity-20 backdrop-blur-sm drop-shadow-sm bg-black/70 font-normal text-base text-white break-words ">
+                <p className=" px-2 rounded-lg font-normal text-base text-white break-words selection:bg-indigo-700">
+                  <span className="text-[#e81ede] font-medium text-xl"> = </span>
+                {/* <p className=" px-2 rounded-lg bg-opacity-20 backdrop-blur-sm drop-shadow-sm bg-black/70 font-normal text-base text-white break-words "> */}
                   {note.desc}
                 </p>
+
               </div>
             );
           })}
@@ -146,10 +149,10 @@ const Notes = () => {
       >
         <div className="relative w-full h-full max-w-sm md:h-auto">
           {/* Modal content */}
-          <div className="relative bg-white rounded-lg shadow">
+          <div className="relative bg-opacity-50 backdrop-blur-sm drop-shadow-sm bg-gray-400 rounded-lg shadow">
             <button
               type="button"
-              className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+              className="absolute top-3 right-2.5 text-white bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
               data-modal-hide="authentication-modal"
               onClick={closeModal}
             >
@@ -168,14 +171,14 @@ const Notes = () => {
               </svg>
             </button>
             <div className="px-6 py-6 lg:px-8">
-              <h3 className="mb-4 text-xl font-medium text-gray-900">
+              <h3 className="mb-4 text-xl font-medium text-white">
                 Add note Box
               </h3>
               <form className="space-y-6" onSubmit={addData}>
                 <div>
                   <label
                     htmlFor="title"
-                    className="block mb-2 text-sm font-medium text-gray-900"
+                    className="block mb-2 text-sm font-medium text-white"
                   >
                     Title
                   </label>
@@ -197,7 +200,7 @@ const Notes = () => {
                 <div>
                   <label
                     htmlFor="desc"
-                    className="block mb-2 text-sm font-medium text-gray-900"
+                    className="block mb-2 text-sm font-medium text-white"
                   >
                     Description
                   </label>
@@ -215,7 +218,7 @@ const Notes = () => {
                 </div>
                 <button
                   type="submit"
-                  className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                  className="w-full text-white bg-zinc-800 hover:bg-zinc-700 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                 >
                   Add note
                 </button>
