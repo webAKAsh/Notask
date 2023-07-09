@@ -1,7 +1,14 @@
 import React from "react";
-import { BsPlusCircleFill } from "react-icons/bs";
+
+import {
+  BsPlusCircleFill,
+  BsFillFileEarmarkBarGraphFill,
+} from "react-icons/bs";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
+import { GiSandsOfTime } from "react-icons/gi";
+import { AiFillLike } from "react-icons/ai";
+
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
@@ -10,7 +17,8 @@ const Notes = () => {
   const [desc, setDesc] = useState("");
   const [notes, setNotes] = useState([]);
   const [dataKey, setDataKey] = useState([]);
-  const [noteState, setNoteState] = useState(false)
+  const [noteState, setNoteState] = useState(false);
+  const [bgColor, setBgColor] = useState("bg-rose-700")
 
   const selectColor = () => {
     const authenticationModal = document.querySelector("#authentication-modal");
@@ -26,8 +34,9 @@ const Notes = () => {
 
   const addData = (e) => {
     e.preventDefault();
-    setNoteState(!noteState)
-    const noteData = { title, desc };
+    setNoteState(!noteState);
+    setBgColor("bg-rose-700")
+    const noteData = { title, desc, bgColor };
     const validation = document.querySelector(".validation");
 
     function validate(demo) {
@@ -39,9 +48,7 @@ const Notes = () => {
     let stamp = false;
     if (!notes.some(validate)) {
       stamp = true;
-      // console.log("unique");
     } else {
-      // console.log("equal");
       validation.classList.remove("hidden");
     }
 
@@ -50,16 +57,14 @@ const Notes = () => {
       const description = document.getElementById("desc");
       if (title.length < 10) {
         if (desc !== "") {
-          // console.log(desc, "valid desc");
           localStorage.setItem(
             `userNote_${randomNumb}`,
             JSON.stringify(noteData)
           );
           closeModal();
-          setNoteState(!noteState)
+          setNoteState(!noteState);
         } else if (desc === "") {
           description.setAttribute("required", "true");
-          // console.log("please write desc");
         }
       } else if (title.length >= 10) {
         localStorage.setItem(
@@ -67,13 +72,13 @@ const Notes = () => {
           JSON.stringify(noteData)
         );
         closeModal();
-        setNoteState(!noteState)
+        setNoteState(!noteState);
       }
     }
   };
 
   const deleteNote = (e, index) => {
-    setNoteState(!noteState)
+    setNoteState(!noteState);
     localStorage.removeItem(dataKey[index]);
   };
 
@@ -81,16 +86,15 @@ const Notes = () => {
     const keys = Object.keys(localStorage);
     const dataKey = keys.filter((key) => key.includes("userNote"));
     setDataKey(dataKey);
-    let dataValues = dataKey.map((e) => JSON.parse(localStorage.getItem(e)))
+    let dataValues = dataKey.map((e) => JSON.parse(localStorage.getItem(e)));
     setNotes(dataValues);
-
-    // console.log(title, desc, notes, noteState);
-
+    setTitle("")
+    setDesc("")
   }, [noteState]);
 
   return (
     <>
-      <header className="px-3 py-4 border border-black">
+      <header className="flex justify-between items-center px-3 py-4 border border-black">
         <div className="flex items-center space-x-6 px-3">
           <div className="relative">
             <BsPlusCircleFill
@@ -100,22 +104,32 @@ const Notes = () => {
           </div>
           <h1 className="text-3xl font-bold">Notes</h1>
         </div>
+        <div className="flex space-x-4 items-center justify-evenly ">
+          <div className="space-x-2 flex justify-center items-center">
+            <p>To do</p>
+            <BsFillFileEarmarkBarGraphFill className="text-rose-500 text-lg" />
+          </div>
+          <div className="space-x-2 flex justify-center items-center">
+            <p>In Progress</p>
+            <GiSandsOfTime className="text-cyan-600 text-lg" />
+          </div>
+          <div className="space-x-2 flex justify-center items-center">
+            <p>Completed</p>
+            <AiFillLike className="text-emerald-500 text-lg" />
+          </div>
+        </div>
       </header>
       <main id="noteBox" className="bg-zinc-300 h-screen">
         <div className="flex flex-wrap gap-3 p-3">
           {notes.map((note, i) => {
             return (
               <div
-                // style={{
-                //   backgroundImage: `url('https://picsum.photos/320/200?random=${i}')`,
-                // }}
-                className="bg-cover bg-bottom max-w-xs bg-slate-900 p-5 space-y-2 border border-amber-300 border-dotted rounded-lg shadow"
+                className={`${note.bgColor} bg-cover bg-bottom max-w-xs p-2 border border-amber-300 border-dotted rounded-lg shadow`}
                 key={i}
               >
                 <div className="flex justify-between space-x-10 items-center px-2 rounded-lg">
-                {/* <div className="flex justify-between items-center px-2 rounded-lg bg-opacity-20 backdrop-blur-sm drop-shadow-sm bg-black/60"> */}
-                  <h5 className="text-2xl text-white font-bold tracking-tight">
-                    <span className="text-[#f7b816] font-semibold">const</span> {note.title}
+                  <h5 className="text-lg text-white font-bold tracking-tight">
+                    {note.title}
                   </h5>
                   <div className="flex items-center justify-end space-x-1">
                     <MdDelete
@@ -128,12 +142,9 @@ const Notes = () => {
                   </div>
                 </div>
 
-                <p className=" px-2 rounded-lg font-normal text-base text-white break-words selection:bg-indigo-700">
-                  <span className="text-[#e81ede] font-medium text-xl"> = </span>
-                {/* <p className=" px-2 rounded-lg bg-opacity-20 backdrop-blur-sm drop-shadow-sm bg-black/70 font-normal text-base text-white break-words "> */}
+                <p className="p-2 text-sm text-white break-words selection:bg-indigo-700">
                   {note.desc}
                 </p>
-
               </div>
             );
           })}
@@ -149,7 +160,7 @@ const Notes = () => {
       >
         <div className="relative w-full h-full max-w-sm md:h-auto">
           {/* Modal content */}
-          <div className="relative bg-opacity-50 backdrop-blur-sm drop-shadow-sm bg-gray-400 rounded-lg shadow">
+          <div className="relative bg-opacity-50 bazckdrop-blur-sm drop-shadow-sm bg-gray-400 rounded-lg shadow">
             <button
               type="button"
               className="absolute top-3 right-2.5 text-white bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
@@ -221,6 +232,7 @@ const Notes = () => {
                   className="w-full text-white bg-zinc-800 hover:bg-zinc-700 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                 >
                   Add note
+                  <BsFillFileEarmarkBarGraphFill className="text-rose-500 ml-2 inline-block" />
                 </button>
               </form>
             </div>

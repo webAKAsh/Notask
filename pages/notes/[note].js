@@ -2,42 +2,43 @@ import React from "react";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 
+import { BsFillFileEarmarkBarGraphFill } from "react-icons/bs";
+import { GiSandsOfTime } from "react-icons/gi";
+import { AiFillLike } from "react-icons/ai";
+
 const Note = () => {
   const router = useRouter();
   const { note } = router.query;
 
-  const [key,setKey] = useState("")
-  const [title, setTitle] = useState("")
-  const [desc, setDesc] = useState("")
-  const [editState, setEditState] = useState(!false)
+  const [key, setKey] = useState("");
+  const [title, setTitle] = useState("");
+  const [desc, setDesc] = useState("");
+  const [editState, setEditState] = useState(!false);
+  const [bgColor, setBgColor] = useState("bg-rose-400");
 
-  // console.log("render-1", key, title, desc)
   useEffect(() => {
     const keys = Object.keys(localStorage);
     const dataKey = keys.filter((key) => key.includes("userNote"));
     const val = JSON.parse(localStorage.getItem(dataKey[note]));
-    // console.log(val)
-    setKey(dataKey[note])
-    setTitle(val.title)
-    setDesc(val.desc)
-    // console.log("UseEffect", key, title, desc)
+    setKey(dataKey[note]);
+    setTitle(val.title);
+    setDesc(val.desc);
   }, [editState]);
-  
-  // console.log("render-2", key, title, desc)
 
   const editData = (e) => {
-    e.preventDefault()
-    const noteData = { title, desc};
-    setEditState(!true)
+    e.preventDefault();
+    const noteData = { title, desc, bgColor };
+    setEditState(!true);
     localStorage.setItem(key, JSON.stringify(noteData));
-    router.push("/")
-  }
+    router.push("/");
+  };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-cover"
-    style={{
-      backgroundImage: `url('https://picsum.photos/320/200?random=${note}')`,
-    }}
+    <div
+      className="flex justify-center items-center h-screen bg-cover"
+      style={{
+        backgroundImage: `url('https://picsum.photos/320/200?random=${note}')`,
+      }}
     >
       <div
         id="authentication-modal"
@@ -49,9 +50,26 @@ const Note = () => {
           {/* Modal content */}
           <div className="relative bg-opacity-20 backdrop-blur-sm drop-shadow-sm rounded-lg shadow">
             <div className="px-6 py-6 lg:px-8">
-              <h3 className="mb-4 text-xl font-medium text-white">
-                Edit note Box
-              </h3>
+              <div className=" mb-4 flex items-center justify-between">
+                <h3 className="text-xl font-medium text-white">
+                  Edit note Box
+                </h3>
+                <div className="flex justify-center items-center text-lg space-x-2">
+                  <p className="text-white">Edit status -</p>
+                  <BsFillFileEarmarkBarGraphFill
+                    onClick={() => setBgColor("bg-rose-600")}
+                    className="text-rose-400 cursor-pointer"
+                  />
+                  <GiSandsOfTime
+                    onClick={() => setBgColor("bg-cyan-700")}
+                    className="text-cyan-600 cursor-pointer"
+                  />
+                  <AiFillLike
+                    onClick={() => setBgColor("bg-emerald-900")}
+                    className="text-emerald-300 cursor-pointer"
+                  />
+                </div>
+              </div>
               <form className="space-y-6" onSubmit={editData}>
                 <div>
                   <label
